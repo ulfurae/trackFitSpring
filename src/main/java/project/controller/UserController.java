@@ -1,19 +1,18 @@
 package project.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import project.persistence.entities.User;
+import org.springframework.web.bind.annotation.RequestParam;
 import project.persistence.entities.BMI;
+import project.persistence.entities.User;
+import project.service.FormulaService;
 import project.service.Implementation.UserServiceImplementation;
 import project.service.UserService;
-import project.service.FormulaService;
 
-@Controller
+@org.springframework.web.bind.annotation.RestController
 public class UserController {
 
     // Instance Variables
@@ -27,28 +26,20 @@ public class UserController {
         this.formulaService = formulaService;
     }
 
-    // Method that returns the view for the URL /viewProfile
-    @RequestMapping(value = "/profile", method = RequestMethod.GET)
-    public String viewProfileGet(Model model){
+    // Method that returns a User as JSON
+    // uses name param to find correct user
+    @RequestMapping("/profile")
+    public User userProfile(@RequestParam String name) {
 
-    	// get logged in user
-        User user = UserServiceImplementation.loggedInUser;
+    	// get user from name
+        User user = userService.findByUsername(name);
 
-        // connect object User to the form
-        model.addAttribute("user", user);
-        
         // calculate BMI
         BMI BMI = formulaService.BMICalculate(user.getHeight(), user.getWeight());
-        
-        // connect object BMI to the form
-        model.addAttribute("bmi", BMI);
-        
         String newBirthday = formulaService.changeDateFormat(user.getBirthday());
-    	
-    	model.addAttribute("newBirthday", newBirthday);
 
-        // Return the view
-        return "Profile";
+        // Return the user as JSON
+        return user;
     }
     
     // Method that receives the POST request on the URL /viewProfile

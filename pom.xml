@@ -5,14 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>HBV501G</groupId>
-    <artifactId>Spring_Web_MVC</artifactId>
-    <version>0.1</version>
+    <artifactId>gs-rest-service</artifactId>
+    <version>0.1.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.5.RELEASE</version>
+        <version>1.5.1.RELEASE</version>
     </parent>
+
+
 
     <dependencies>
 
@@ -65,6 +67,7 @@
         </dependency>
 
     </dependencies>
+
 
 
     <build>
