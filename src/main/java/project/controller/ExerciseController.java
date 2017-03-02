@@ -6,6 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import project.persistence.entities.Exercise;
 import project.persistence.entities.User;
 import project.persistence.entities.UserExercise;
 import project.service.ExerciseService;
@@ -15,7 +18,7 @@ import project.service.UserExerciseService;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 public class ExerciseController {
 
     // Instance Variables
@@ -30,23 +33,14 @@ public class ExerciseController {
     }
 
     // GET method that returns the correct view for the URL /addExercise
-    @RequestMapping(value = "/addExercise", method = RequestMethod.GET)
-    public String addExerciseGet(Model model){
+    @RequestMapping(value = "/getExercises")
+    public List<Exercise> addExerciseGet(){
+    	
+    	List<Exercise> exercises = exerciseService.findAll();
+    	
+    	System.out.println(exercises);
 
-        /* TODO: make this functional
-        List el =  exerciseService.findAllReverseOrder();
-        List el2 = new ArrayList();
-        for(Object x : el) {
-            Exercise b = (Exercise) x;
-            el2.add(b.getName());
-        }
-        model.addAttribute("exercises", el2);
-        */
-
-        // connecting the UserExercise object to the form
-        model.addAttribute("exerciseForm",new UserExercise());
-
-        return "ExerciseAdd";
+        return exercises;
     }
 
     // Method that receives the POST request on the URL /addExercise and receives the ModelAttribute("addExercise")
