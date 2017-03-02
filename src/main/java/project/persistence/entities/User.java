@@ -1,6 +1,9 @@
 package project.persistence.entities;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 
 @Entity
@@ -15,6 +18,8 @@ public class User {
     private String username;
     private String pass; 
     private String fullName;
+    
+    @JsonFormat(pattern="yyy-MM-dd")
     private Date birthday;
 
     private int height;

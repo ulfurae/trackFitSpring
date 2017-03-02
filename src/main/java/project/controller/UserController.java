@@ -1,5 +1,7 @@
 package project.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,10 +35,6 @@ public class UserController {
 
     	// get user from name
         User user = userService.findByUsername(name);
-
-        // calculate BMI
-        BMI BMI = formulaService.BMICalculate(user.getHeight(), user.getWeight());
-        String newBirthday = formulaService.changeDateFormat(user.getBirthday());
 
         // Return the user as JSON
         return user;
