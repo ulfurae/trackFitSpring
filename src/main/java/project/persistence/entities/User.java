@@ -19,7 +19,7 @@ public class User {
     private String pass; 
     private String fullName;
     
-    @JsonFormat(pattern="yyy-MM-dd")
+    @JsonFormat(pattern="dd.MM.yyyy")
     private Date birthday;
 
     private int height;
