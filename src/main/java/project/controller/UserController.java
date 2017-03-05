@@ -69,14 +69,19 @@ public class UserController {
     }
     
     // Method that returns the view for the URL /viewProfile/change to update User information
-    @RequestMapping(value = "/viewProfile/change", method = RequestMethod.GET)
-    public String viewProfileChange(Model model){
+    @RequestMapping(value = "/changeProfile")
+    public User viewProfileChange(@RequestParam String weight, String userName){
     	
-    	// connect User object to the form
-    	model.addAttribute("newUser", new User());
+    	User oldUser = userService.findByUsername(userName);
+    	
+    	int newWeight = Integer.parseInt(weight);
+    	oldUser.setWeight(newWeight);
+    	userService.save(oldUser);
+    	
+    	User newUser = userService.findByUsername(userName);
 
         // Return the view
-        return "ProfileChange";
+        return newUser;
     }
 
 }

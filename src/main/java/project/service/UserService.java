@@ -19,6 +19,8 @@ public interface UserService {
      * @return All {@link User}s with the {@link String username} passed
      */
     User findByUsername(String username);
+    
+    User findByFullName(String fullName);
 
     User getLoggedInUser();
 

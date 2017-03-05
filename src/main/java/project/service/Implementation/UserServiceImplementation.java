@@ -30,6 +30,11 @@ public class UserServiceImplementation implements UserService {
     public User findByUsername(String username) {
         return repository.findByUsername(username);
     }
+    
+    @Override
+    public User findByFullName(String fullName) {
+        return repository.findByFullName(fullName);
+    }
 
     @Override
     public User getLoggedInUser() {
