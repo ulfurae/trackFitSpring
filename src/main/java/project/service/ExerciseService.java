@@ -43,6 +43,6 @@ public interface ExerciseService {
      * @param name {@link String}
      * @return All {@link Exercise}s with the {@link String name} passed
      */
-    List<Exercise> findByName(String name);
+    Exercise findByName(String name);
 
 }

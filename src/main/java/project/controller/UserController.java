@@ -70,7 +70,7 @@ public class UserController {
     
     // Method that returns the view for the URL /viewProfile/change to update User information
     @RequestMapping(value = "/changeProfile")
-    public User viewProfileChange(@RequestParam String weight, String userName){
+    public void viewProfileChange(@RequestParam String weight, String userName){
     	
     	User oldUser = userService.findByUsername(userName);
     	
@@ -80,8 +80,6 @@ public class UserController {
     	
     	User newUser = userService.findByUsername(userName);
 
-        // Return the view
-        return newUser;
     }
 
 }

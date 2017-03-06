@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import project.persistence.entities.Exercise;
@@ -14,6 +15,7 @@ import project.persistence.entities.UserExercise;
 import project.service.ExerciseService;
 import project.service.Implementation.UserServiceImplementation;
 import project.service.UserExerciseService;
+import project.service.UserService;
 
 import java.util.Date;
 import java.util.List;
@@ -24,12 +26,14 @@ public class ExerciseController {
     // Instance Variables
     ExerciseService exerciseService;
     UserExerciseService uExerciseService;
+    UserService userService;
 
     // Dependency Injection
     @Autowired
-    public ExerciseController(ExerciseService exerciseService, UserExerciseService uExerciseService) {
+    public ExerciseController(ExerciseService exerciseService, UserExerciseService uExerciseService, UserService userService) {
         this.exerciseService = exerciseService;
         this.uExerciseService = uExerciseService;
+        this.userService = userService;
     }
 
     // GET method that returns the correct view for the URL /addExercise
@@ -43,26 +47,35 @@ public class ExerciseController {
         return exercises;
     }
 
-    // Method that receives the POST request on the URL /addExercise and receives the ModelAttribute("addExercise")
-    @RequestMapping(value = "/addExercise", method = RequestMethod.POST)
-    public String addExercisePost(@ModelAttribute("addExercise") UserExercise uExercise, Model model) {
+    @RequestMapping(value = "/addExercise")
+    public String addExercisePost(@RequestParam String userName, String goalID, String exercise, String rep, String amount) {
 
-        // get logged in user from global variable UserServiceImplementation.loggedInUser
-        User user = UserServiceImplementation.loggedInUser;
+    	try {
+    		// get logged in user from global variable UserServiceImplementation.loggedInUser
+    		//User user = UserServiceImplementation.loggedInUser;
+        	User user = userService.findByUsername(userName);
+        	UserExercise uExercise = new UserExercise();
+        	Exercise exerciseNew = exerciseService.findByName(exercise);
+        	
+        	Long goalIDLong = Long.parseLong(goalID);
+        	int repetitions = Integer.parseInt(rep);
+        	int amountKg = Integer.parseInt(amount);
+        	Long exerciseID = exerciseNew.getId();
 
-        // set mock values into UserExercise for testing
-        uExercise.setDate(new Date());
-        uExercise.setUserID(user.getId());
-        uExercise.setUserGoalID((long) 0);
+            uExercise.setDate(new Date());
+            uExercise.setUserID(user.getId());
+            uExercise.setUserGoalID(goalIDLong);
+            uExercise.setUnit1(repetitions);
+            uExercise.setUnit2(amountKg);
+            uExercise.setExerciseID(exerciseID);
 
-        // Save the UserExercise that is received from the form
-        uExerciseService.save(uExercise);
-
-        // Refresh the form with a new UserExercise
-        model.addAttribute("exerciseForm", new UserExercise());
-
-        // Return the view
-        return "ExerciseAdd";
+            // Save the UserExercise that is received from the form
+            uExerciseService.save(uExercise);
+            
+            return "true";
+    	} catch(Exception e){
+    		return "false";
+    	}
     }
     
  // GET method that returns the view for the URL /viewPerformace

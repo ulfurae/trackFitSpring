@@ -53,7 +53,7 @@ public class ExerciseServiceImplementation implements ExerciseService {
     }
 
     @Override
-    public List<Exercise> findByName(String name) {
+    public Exercise findByName(String name) {
         return repository.findByName(name);
     }
 
