@@ -79,20 +79,15 @@ public class ExerciseController {
     }
     
  // GET method that returns the view for the URL /viewPerformace
-    @RequestMapping(value = "/exerciseLog", method = RequestMethod.GET)
-    public String viewExerciseLogGet(Model model){
-
-        // get logged in user from global variable UserServiceImplementation.loggedInUser
-        User user = UserServiceImplementation.loggedInUser;
-
-        List<Object[]> list = uExerciseService.findAllUserExercises(user.getId());
-
-        // Here we get all the UserExercises (in a reverse order) and add them to the model
-        model.addAttribute("exercises", list);
-
-        // Return the view
-        return "ExerciseLog";
+	@RequestMapping("/exerciseLog")
+    public UserExercise userExercise(@RequestParam String userName){
+		// get logged in user from global variable UserServiceImplementation.loggedInUser
+		//User user = UserServiceImplementation.loggedInUser;
+    	User user = userService.findByUsername(userName);
+    	
+    	UserExercise uExercise = new UserExercise();       	
+    	uExercise = uExerciseService.findByUserID(user.getId());
+    	
+        return uExercise;
     }
-    
-  
 }

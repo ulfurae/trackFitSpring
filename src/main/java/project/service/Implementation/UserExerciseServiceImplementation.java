@@ -53,7 +53,7 @@ public class UserExerciseServiceImplementation implements UserExerciseService {
     }
 
     @Override
-    public List<UserExercise> findByUserID(Long userID) {
+    public UserExercise findByUserID(Long userID) {
         return repository.findByUserID(userID);
     }
 
