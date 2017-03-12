@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import project.persistence.entities.Exercise;
 import project.persistence.entities.User;
@@ -23,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-@Controller
+@RestController
 public class GoalController {
 
     // Instance Variables
@@ -33,26 +34,18 @@ public class GoalController {
     ExerciseService exerciseService;
     UserGoal currentUserGoal = null;
 
-    SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
     
     // Dependency Injection
     @Autowired
-    public GoalController(GoalService goalService, UserExerciseService uExerciseService) {
+    public GoalController(GoalService goalService, UserExerciseService uExerciseService, UserService userService, ExerciseService exerciseService) {
         this.goalService = goalService;
         this.uExerciseService = uExerciseService;
+        this.userService = userService;
+        this.exerciseService = exerciseService;
     }
 
-    // GET method that returns the correct view for the URL /addGoal
-    @RequestMapping(value = "/addGoal", method = RequestMethod.GET)
-    public String addGoalGet(Model model){
 
-        // connecting the UserGoal object to the form
-        model.addAttribute("goalForm",new UserGoal());
-
-        return "GoalAdd";
-    }
-
-    // Method that receives the POST request on the URL /addGoal and receives the ModelAttribute("addGoal")
     @RequestMapping(value = "/addGoal")
     public String addGoalPost(@RequestParam String userName, String exercise, String rep, String amount, String startDate, String endDate, String status) {
     	try {
@@ -68,25 +61,28 @@ public class GoalController {
 			Date gendDate = format.parse(endDate);
 			Long exerciseID = exerciseNew.getId();
 			
+			//System.out.println(gstartDate);
+			
 			uGoal.setUserID(user.getId());
 			uGoal.setStartDate(gstartDate);
 			uGoal.setEndDate(gendDate);
             uGoal.setUnit1(repetitions);
             uGoal.setUnit2(amountKg);
             uGoal.setExerciseID(exerciseID);
-			uGoal.setStatus("not completed");
+			uGoal.setStatus(status);
 			
 			// Save the UserGoal that is received from the form
 			goalService.save(uGoal);
 			
 			return "true";
-    	} catch(Exception e){
+    	}catch(Exception e){
+    		e.printStackTrace();
     		return "false";
     	}
     }
     
  // GET method that returns the view for the URL /viewPerformace
-    @RequestMapping(value = "/goalLog", method = RequestMethod.GET)
+    @RequestMapping(value = "/goalLog")
     public String viewGoalLogGet(Model model){
 
         // get logged in user from global variable UserServiceImplementation.loggedInUser
@@ -117,7 +113,7 @@ public class GoalController {
         return "UserGoal";
     }
 
-    @RequestMapping(value = "/addExerciseGoal", method = RequestMethod.POST)
+    @RequestMapping(value = "/addExerciseGoal")
     public String addExerciseGoalPost(@ModelAttribute("addExerciseGoal") UserExercise uExercise, Model model) {
 
         // set mock values into UserExercise for testing
