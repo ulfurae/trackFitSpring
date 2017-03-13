@@ -76,15 +76,20 @@ public class UserController {
     
     // Method that returns the view for the URL /viewProfile/change to update User information
     @RequestMapping(value = "/changeProfile")
-    public void viewProfileChange(@RequestParam String weight, String userName){
+    public boolean viewProfileChange(@RequestParam String weight, String userName){
     	
-    	User oldUser = userService.findByUsername(userName);
-    	
-    	int newWeight = Integer.parseInt(weight);
-    	oldUser.setWeight(newWeight);
-    	userService.save(oldUser);
-    	
-    	User newUser = userService.findByUsername(userName);
+    	try { 
+    		User oldUser = userService.findByUsername(userName);
+    		int newWeight = Integer.parseInt(weight);
+        	oldUser.setWeight(newWeight);
+        	userService.save(oldUser);
+        	
+        	User newUser = userService.findByUsername(userName);
+        	
+        	return true;
+    	} catch(Exception e) {
+    		return false;
+    	}
 
     }
 
