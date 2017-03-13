@@ -1,6 +1,9 @@
 package project.persistence.entities;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,6 +22,8 @@ public class UserExercise {
 
     private int unit1;
     private int unit2;
+    
+    @JsonFormat(pattern="dd.MM.yyyy")
     private Date date;
 
     public UserExercise() { }

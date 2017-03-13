@@ -80,14 +80,16 @@ public class ExerciseController {
     
  // GET method that returns the view for the URL /viewPerformace
 	@RequestMapping("/exerciseLog")
-    public UserExercise userExercise(@RequestParam String userName){
-		// get logged in user from global variable UserServiceImplementation.loggedInUser
-		//User user = UserServiceImplementation.loggedInUser;
-    	User user = userService.findByUsername(userName);
-    	
-    	UserExercise uExercise = new UserExercise();       	
-    	uExercise = uExerciseService.findByUserID(user.getId());
-    	
-        return uExercise;
+    public List<UserExercise> userExercise(@RequestParam String userName){
+		try {
+			User user = userService.findByUsername(userName);
+	    	
+	    	List<UserExercise> userExercise = uExerciseService.findByUserID(user.getId());
+	    	
+	        return userExercise;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null; 
+		}
     }
 }
