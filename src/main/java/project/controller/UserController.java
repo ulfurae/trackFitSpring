@@ -28,66 +28,54 @@ public class UserController {
         this.formulaService = formulaService;
     }
 
-    // Method that returns a User as JSON
-    // uses name param to find correct user
+    /**
+     * Function searches for user with name input and returns the User
+     * @param name is the userName used to find User
+     * @return User
+     */
     @RequestMapping("/profile")
     public User userProfile(@RequestParam String name) {
-    		// get user by name
+    		
+    		//Find user by userName
     		User user = userService.findByUsername(name);
     		
     		if(user != null) {
-    			//If user found, return as JSON
+    			//If user found, return User as JSON
     			return user;
     		}
     		else {
-    			//If user not found, return an empty user as JSON
+    			//If user not found, return an empty User as JSON
     			User notFoundUser = new User(null,null,null,null,0,0);
     			return notFoundUser;
     		}
     }
     
-    // Method that receives the POST request on the URL /viewProfile
-    @RequestMapping(value = "/viewProfile", method = RequestMethod.POST)
-    public String viewProfilePost(@ModelAttribute("newUser") User newUser,
-                                     Model model){
-    	
-    	// mock Object User updating weight information
-    	User oldUser = UserServiceImplementation.loggedInUser;
-    	int weight = newUser.getWeight();
-    	oldUser.setWeight(weight);
-    	userService.save(oldUser);
-    	
-    	// mock Object User BMI changes if weight is updated
-    	User updatedUser = UserServiceImplementation.loggedInUser;
-    	// connect User object to the form
-    	model.addAttribute("user", updatedUser);
-    	// update BMI
-    	BMI BMI = formulaService.BMICalculate(updatedUser.getHeight(), updatedUser.getWeight());
-	   	// connect BMI object to the form
-    	model.addAttribute("bmi", BMI);
-    	
-    	String newBirthday = formulaService.changeDateFormat(updatedUser.getBirthday());
-    	
-    	model.addAttribute("newBirthday", newBirthday);
-
-        // Return the view
-        return "Profile";
-    }
-    
-    // Method that returns the view for the URL /viewProfile/change to update User information
+    /**
+     * The function takes a new weight and saves it in database
+     * @param weight is the new weight 
+     * @param userName is the name of the user that wants to change his weight
+     * @return true if the new weight was successfully saved in database
+     * @return false if the new weight was not successfully saved in database
+     */
     @RequestMapping(value = "/changeProfile")
     public boolean viewProfileChange(@RequestParam String weight, String userName){
     	
     	try { 
+    		//Find user by his userName
     		User oldUser = userService.findByUsername(userName);
+    		
+    		//Change String weight input to integer
     		int newWeight = Integer.parseInt(weight);
+    		
+    		//Change the user's weight
         	oldUser.setWeight(newWeight);
-        	userService.save(oldUser);
         	
-        	User newUser = userService.findByUsername(userName);
+        	//Save changes in database
+        	userService.save(oldUser);
         	
         	return true;
     	} catch(Exception e) {
+    		e.printStackTrace();
     		return false;
     	}
 
