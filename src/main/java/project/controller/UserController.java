@@ -32,12 +32,18 @@ public class UserController {
     // uses name param to find correct user
     @RequestMapping("/profile")
     public User userProfile(@RequestParam String name) {
-
-    	// get user from name
-        User user = userService.findByUsername(name);
-
-        // Return the user as JSON
-        return user;
+    		// get user by name
+    		User user = userService.findByUsername(name);
+    		
+    		if(user != null) {
+    			//If user found, return as JSON
+    			return user;
+    		}
+    		else {
+    			//If user not found, return an empty user as JSON
+    			User notFoundUser = new User(null,null,null,null,0,0);
+    			return notFoundUser;
+    		}
     }
     
     // Method that receives the POST request on the URL /viewProfile
