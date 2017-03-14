@@ -51,7 +51,7 @@ public class UserController {
     }
     
     /**
-     * The function takes a new weight and saves it in database
+     * Function takes a new weight and saves it in database
      * @param weight is the new weight 
      * @param userName is the name of the user that wants to change his weight
      * @return true if the new weight was successfully saved in database

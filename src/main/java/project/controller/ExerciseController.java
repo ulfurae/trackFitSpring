@@ -36,41 +36,63 @@ public class ExerciseController {
         this.userService = userService;
     }
 
-    // GET method that returns the correct view for the URL /addExercise
+    
+    /**
+     * Function searches for all possible exercises that the user can register
+     * @return list of exercises
+     */
     @RequestMapping(value = "/getExercises")
     public List<Exercise> addExerciseGet(){
     	
+    	//Find all exercises in database
     	List<Exercise> exercises = exerciseService.findAll();
-    	
-    	System.out.println(exercises);
 
         return exercises;
     }
 
+    /**
+     * Function receives data and makes a new UserExercise entry in database
+     * @param userName is the name of the user adding this new entry
+     * @param goalID is the id of a goal that the exercise entry belongs to
+     * @param exercise is the name of the exercise
+     * @param rep are the repetitions that the user did on this exercise
+     * @param amount is the weight that the user lifted
+     * @return true if the UserExercise was successfully saved in database
+     * @return false if the UserExercise was not successfully saved in database
+     */
     @RequestMapping(value = "/addExercise")
     public String addExercisePost(@RequestParam String userName, String goalID, String exercise, String rep, String amount) {
 
     	try {
-    		// get logged in user from global variable UserServiceImplementation.loggedInUser
-    		//User user = UserServiceImplementation.loggedInUser;
+    		//Find User entity by his userName
         	User user = userService.findByUsername(userName);
-        	UserExercise uExercise = new UserExercise();
-        	Exercise exerciseNew = exerciseService.findByName(exercise);
         	
+        	//Make new UserExercise
+        	UserExercise userExercise = new UserExercise();
+        	
+        	//Find Exercise entity with the name of the exercise
+        	Exercise exerciseFound = exerciseService.findByName(exercise);
+        	
+        	//Change String goalID input to Long
         	Long goalIDLong = Long.parseLong(goalID);
+        	//Change String rep input to integer
         	int repetitions = Integer.parseInt(rep);
+        	//Change String amount input to integer
         	int amountKg = Integer.parseInt(amount);
-        	Long exerciseID = exerciseNew.getId();
+        	
+        	//Get the exerciseId from the Exercise entity
+        	Long exerciseID = exerciseFound.getId();
 
-            uExercise.setDate(new Date());
-            uExercise.setUserID(user.getId());
-            uExercise.setUserGoalID(goalIDLong);
-            uExercise.setUnit1(repetitions);
-            uExercise.setUnit2(amountKg);
-            uExercise.setExerciseID(exerciseID);
+        	//Set the variables of the UserExercise
+            userExercise.setDate(new Date());
+            userExercise.setUserID(user.getId());
+            userExercise.setUserGoalID(goalIDLong);
+            userExercise.setUnit1(repetitions);
+            userExercise.setUnit2(amountKg);
+            userExercise.setExerciseID(exerciseID);
 
-            // Save the UserExercise that is received from the form
-            uExerciseService.save(uExercise);
+            // Save the UserExercise received by this function in database
+            uExerciseService.save(userExercise);
             
             return "true";
     	} catch(Exception e){
@@ -78,15 +100,29 @@ public class ExerciseController {
     	}
     }
     
- // GET method that returns the view for the URL /viewPerformace
+    /**
+     * Function finds all UserExercise entries belonging to a certain user and returns them
+     * @param userName is the name of the user who's trying to get all his UserExercise entries
+     * @return List<UserExercise> if the user was found in database
+     * @return null if user not found or if something went wrong
+     */
 	@RequestMapping("/exerciseLog")
     public List<UserExercise> userExercise(@RequestParam String userName){
 		try {
+			//Find User entity by his userName
 			User user = userService.findByUsername(userName);
+			
+			if(user != null) {
+				//If User found, return a list of his UserExercises
+				List<UserExercise> userExercise = uExerciseService.findByUserID(user.getId());
+		    	
+		        return userExercise;
+    		}
+    		else {
+    			//If User not found, return null
+    			return null;
+    		}
 	    	
-	    	List<UserExercise> userExercise = uExerciseService.findByUserID(user.getId());
-	    	
-	        return userExercise;
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null; 
