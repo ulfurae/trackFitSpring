@@ -45,16 +45,31 @@ public class GoalController {
         this.exerciseService = exerciseService;
     }
 
-
+    /**
+     * Function receives data and makes a new UserGoal entry in database
+     * @param userName is the name of the user adding this new entry
+     * @param exercise is the name of the exercise
+     * @param rep are the repetitions that the user did on this exercise
+     * @param amount is the weight that the user lifted
+     * @param startDate is the date user chooses to start working on that goal
+     * @param endDate is the due date of the goal
+     * @param status is a string that shows if goal is in process or finished
+     * @return true if the UserGoal was successfully saved in database
+     * @return false if the UserGoal was not successfully saved in database
+     */
     @RequestMapping(value = "/addGoal")
     public String addGoalPost(@RequestParam String userName, String exercise, String rep, String amount, String startDate, String endDate, String status) {
     	try {
-			// get logged in user from global variable UserServiceImplementation.loggedInUser
-			//User user = UserServiceImplementation.loggedInUser;
+    		//create new User entity and define it the current logged in user
 			User user = userService.findByUsername(userName);
+		
+			//create new UserGoal entity
 			UserGoal uGoal = new UserGoal();
+			
+			//create new Exercise and define it by chosen exercise
 			Exercise exerciseNew = exerciseService.findByName(exercise);
 			
+			//get input data from front end
 			int repetitions = Integer.parseInt(rep);
 			int amountKg = Integer.parseInt(amount);
 			Date gstartDate = format.parse(startDate);
@@ -63,6 +78,7 @@ public class GoalController {
 			
 			//System.out.println(gstartDate);
 			
+			//assign input data to the parameters of UserGoal
 			uGoal.setUserID(user.getId());
 			uGoal.setStartDate(gstartDate);
 			uGoal.setEndDate(gendDate);
@@ -71,7 +87,7 @@ public class GoalController {
             uGoal.setExerciseID(exerciseID);
 			uGoal.setStatus(status);
 			
-			// Save the UserGoal that is received from the form
+			// Save the UserGoal to database
 			goalService.save(uGoal);
 			
 			return "true";
@@ -81,56 +97,5 @@ public class GoalController {
     	}
     }
     
- // GET method that returns the view for the URL /viewPerformace
-    @RequestMapping(value = "/goalLog")
-    public String viewGoalLogGet(Model model){
-
-        // get logged in user from global variable UserServiceImplementation.loggedInUser
-        User user = UserServiceImplementation.loggedInUser;
-
-        // Here we get all the UserExercises by userID and add them to the model
-        model.addAttribute("goals", goalService.findAllUserGoals(user.getId()));
-
-        // Return the view
-        return "GoalLog";
-    }
-
-    // Method that returns the correct view for the URL /goal/{goalID}
-    // This method finds and returns the UserGoal with the requested {goalID}
-    @RequestMapping(value = "/goal/{id}", method = RequestMethod.GET)
-    public String userGoalGet(@PathVariable Long id,
-                                             Model model){
-
-        // set current userGoal
-        currentUserGoal  = goalService.findOne(id);
-
-        // Get UserGoal with this id and add it to the model
-        model.addAttribute("goal", goalService.findOneUserGoal(currentUserGoal.getUserID(), id).get(0));
-        model.addAttribute("exerciseForm", new UserExercise());
-
-
-        // Return the view
-        return "UserGoal";
-    }
-
-    @RequestMapping(value = "/addExerciseGoal")
-    public String addExerciseGoalPost(@ModelAttribute("addExerciseGoal") UserExercise uExercise, Model model) {
-
-        // set mock values into UserExercise for testing
-        uExercise.setDate(new Date());
-        uExercise.setUserID(currentUserGoal.getUserID());
-        uExercise.setUserGoalID(currentUserGoal.getId());
-        uExercise.setExerciseID(currentUserGoal.getExerciseID());
-
-        // Save the UserExercise that is received from the form
-
-        uExerciseService.save(uExercise);
-
-        // Refresh the form with a new UserExercise
-        model.addAttribute("exerciseForm", new UserExercise());
-
-        // Return the view
-        return "redirect:/goal/" + currentUserGoal.getId();
-    }
     
 }
