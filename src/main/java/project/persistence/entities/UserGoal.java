@@ -2,6 +2,10 @@ package project.persistence.entities;
 
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -18,7 +22,11 @@ public class UserGoal {
     private Long exerciseID;
     private int unit1;
     private int unit2;
+    
+    @JsonFormat(pattern="dd.MM.yyyy")
     private Date startDate;
+    
+    @JsonFormat(pattern="dd.MM.yyyy")
     private Date endDate;
     private String status;
 
@@ -74,14 +82,17 @@ public class UserGoal {
 		this.unit2 = unit2;
 	}
 
-    public Date getStartDate() { return startDate; }
+	private SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    public String getStartDate() { 
+    	return format.format(startDate); 
+    }
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
 
-    public Date getEndDate() {
-        return endDate;
+    public String getEndDate() {
+        return format.format(endDate);
     }
 
 	public void setEndDate(Date endDate) {

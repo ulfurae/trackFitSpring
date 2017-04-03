@@ -22,6 +22,7 @@ import project.service.UserService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 @RestController
@@ -97,5 +98,32 @@ public class GoalController {
     	}
     }
     
-    
+    /**
+     * Function finds all UserGoal entries belonging to a certain user and returns them
+     * @param userName is the name of the user who's trying to get all his UserGoal entries
+     * @return List<UserGoal> if the user was found in database
+     * @return null if user not found or if something went wrong
+     */
+	@RequestMapping("/goalLog")
+    public List<UserGoal> userGoal(@RequestParam String userName){
+		try {
+			//Find User entity by his userName
+			User user = userService.findByUsername(userName);
+			
+			if(user != null) {
+				//If User found, return a list of his UserGoals
+				List<UserGoal> userGoal = goalService.findByUserID(user.getId());
+		    	
+		        return userGoal;
+    		}
+    		else {
+    			//If User not found, return null
+    			return null;
+    		}
+	    	
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null; 
+		}
+    }
 }
