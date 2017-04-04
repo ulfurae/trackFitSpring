@@ -53,16 +53,16 @@ public class UserController {
     /**
      * Function takes a new weight and saves it in database
      * @param weight is the new weight 
-     * @param userName is the name of the user that wants to change his weight
+     * @param id is the name of the user that wants to change his weight
      * @return true if the new weight was successfully saved in database
      * @return false if the new weight was not successfully saved in database
      */
     @RequestMapping(value = "/changeProfile")
-    public boolean viewProfileChange(@RequestParam String weight, String userName){
+    public boolean viewProfileChange(@RequestParam String weight, Long id){
     	
     	try { 
     		//Find user by his userName
-    		User oldUser = userService.findByUsername(userName);
+    		User oldUser = userService.findById(id);
     		
     		//Change String weight input to integer
     		int newWeight = Integer.parseInt(weight);
