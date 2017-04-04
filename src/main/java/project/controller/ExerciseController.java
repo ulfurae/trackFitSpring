@@ -49,6 +49,32 @@ public class ExerciseController {
 
         return exercises;
     }
+    
+    /**
+     * 
+     * @param exerciseId
+     * @return
+     */
+    @RequestMapping(value = "/deleteExercise")
+    public String deleteExercise(@RequestParam String exerciseId){
+    	
+    	try {
+    		//Change String exerciseId input to long
+    		Long userExerciseId = Long.parseLong(exerciseId);
+    		
+    		//Find userExercise with certain Id
+    		UserExercise uExercise = uExerciseService.findOne(userExerciseId);
+        	
+    		//Delete the userExercise found
+        	uExerciseService.delete(uExercise);
+        	
+        	return "true";
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		return "false";
+    	}
+
+    }
 
     /**
      * Function receives data and makes a new UserExercise entry in database
