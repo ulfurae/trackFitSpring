@@ -52,7 +52,7 @@ public class ExerciseController {
 
     /**
      * Function receives data and makes a new UserExercise entry in database
-     * @param userName is the name of the user adding this new entry
+     * @param userId is the name of the user adding this new entry
      * @param goalID is the id of a goal that the exercise entry belongs to
      * @param exercise is the name of the exercise
      * @param rep are the repetitions that the user did on this exercise
@@ -61,11 +61,11 @@ public class ExerciseController {
      * @return false if the UserExercise was not successfully saved in database
      */
     @RequestMapping(value = "/addExercise")
-    public String addExercisePost(@RequestParam String userName, String goalID, String exercise, String rep, String amount) {
+    public String addExercisePost(@RequestParam Long userId, String goalID, String exercise, String rep, String amount) {
 
     	try {
     		//Find User entity by his userName
-        	User user = userService.findByUsername(userName);
+        	User user = userService.findById(userId);
         	
         	//Make new UserExercise
         	UserExercise userExercise = new UserExercise();
@@ -102,15 +102,15 @@ public class ExerciseController {
     
     /**
      * Function finds all UserExercise entries belonging to a certain user and returns them
-     * @param userName is the name of the user who's trying to get all his UserExercise entries
+     * @param userId is the name of the user who's trying to get all his UserExercise entries
      * @return List<UserExercise> if the user was found in database
      * @return null if user not found or if something went wrong
      */
 	@RequestMapping("/exerciseLog")
-    public List<UserExercise> userExercise(@RequestParam String userName){
+    public List<UserExercise> userExercise(@RequestParam Long userId){
 		try {
 			//Find User entity by his userName
-			User user = userService.findByUsername(userName);
+			User user = userService.findById(userId);
 			
 			if(user != null) {
 				//If User found, return a list of his UserExercises

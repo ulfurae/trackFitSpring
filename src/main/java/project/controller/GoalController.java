@@ -48,7 +48,7 @@ public class GoalController {
 
     /**
      * Function receives data and makes a new UserGoal entry in database
-     * @param userName is the name of the user adding this new entry
+     * @param userId is the name of the user adding this new entry
      * @param exercise is the name of the exercise
      * @param rep are the repetitions that the user did on this exercise
      * @param amount is the weight that the user lifted
@@ -59,10 +59,10 @@ public class GoalController {
      * @return false if the UserGoal was not successfully saved in database
      */
     @RequestMapping(value = "/addGoal")
-    public String addGoalPost(@RequestParam String userName, String exercise, String rep, String amount, String startDate, String endDate, String status) {
+    public String addGoalPost(@RequestParam Long userId, String exercise, String rep, String amount, String startDate, String endDate, String status) {
     	try {
     		//create new User entity and define it the current logged in user
-			User user = userService.findByUsername(userName);
+			User user = userService.findById(userId);
 		
 			//create new UserGoal entity
 			UserGoal uGoal = new UserGoal();
