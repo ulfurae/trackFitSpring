@@ -105,14 +105,17 @@ public class GoalController {
      * @return null if user not found or if something went wrong
      */
 	@RequestMapping("/goalLog")
-    public List<UserGoal> userGoal(@RequestParam String userName){
+    public List<UserGoal> userGoal(@RequestParam String userId){
 		try {
+			
+			Long parsedUserId = Long.parseLong(userId);
+			
 			//Find User entity by his userName
-			User user = userService.findByUsername(userName);
+			User user = userService.findById(parsedUserId);
 			
 			if(user != null) {
 				//If User found, return a list of his UserGoals
-				List<UserGoal> userGoal = goalService.findByUserID(user.getId());
+				List<UserGoal> userGoal = goalService.findByUserID(parsedUserId);
 		    	
 		        return userGoal;
     		}
