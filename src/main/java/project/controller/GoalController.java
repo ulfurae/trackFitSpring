@@ -129,4 +129,25 @@ public class GoalController {
 			return null; 
 		}
     }
+	
+	@RequestMapping(value = "/deleteGoal")
+    public String deleteGoal(@RequestParam String goalId){
+    	
+    	try {
+    		//Change String exerciseId input to long
+    		Long userGoalId = Long.parseLong(goalId);
+    		
+    		//Find userExercise with certain Id
+    		UserGoal uGoal = goalService.findOne(userGoalId);
+        	
+    		//Delete the userExercise found
+        	goalService.delete(uGoal);
+        	
+        	return "true";
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		return "false";
+    	}
+
+    }
 }
