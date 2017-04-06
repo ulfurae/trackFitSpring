@@ -134,14 +134,43 @@ public class GoalController {
     public String deleteGoal(@RequestParam String goalId){
     	
     	try {
-    		//Change String exerciseId input to long
+    		//Change String goalId input to long
     		Long userGoalId = Long.parseLong(goalId);
     		
-    		//Find userExercise with certain Id
+    		//Find userGoal with certain Id
     		UserGoal uGoal = goalService.findOne(userGoalId);
         	
-    		//Delete the userExercise found
+    		//Delete the userGoal found
         	goalService.delete(uGoal);
+        	
+        	return "true";
+    	}catch(Exception e){
+    		e.printStackTrace();
+    		return "false";
+    	}
+
+    }
+	
+	@RequestMapping(value = "/changeGoalStatus")
+    public String changeGoalStatus(@RequestParam String goalId){
+    	
+    	try {
+    		//Change String goalId input to long
+    		Long userGoalId = Long.parseLong(goalId);
+    		
+    		//Find userGoal with certain Id
+    		UserGoal uGoal = goalService.findOne(userGoalId);
+    		
+    		if(uGoal.getStatus().equals("Not completed")) {
+    			System.out.println(uGoal.getStatus());
+    			uGoal.setStatus("Completed");
+    		}
+    		else if(uGoal.getStatus().equals("Completed")) {
+    			uGoal.setStatus("Not completed");
+    		}
+    		
+    		//Save new status for uGoal
+    		goalService.save(uGoal);
         	
         	return "true";
     	}catch(Exception e){
